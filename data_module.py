@@ -26,23 +26,18 @@ def clean_up_data():
     big_mac_df = big_mac_df[['name', 'local_price', 'date']]
     big_mac_df = big_mac_df.query("name == 'Australia'")
 
-    # Drop unwanted years and July entries
     indices_to_drop = big_mac_df[big_mac_df['date'].str.contains(r'200[0-9]|201[0-5]')].index
     big_mac_df = big_mac_df.drop(indices_to_drop)
 
     drop_07 = big_mac_df[big_mac_df['date'].str.contains('07')].index
     big_mac_df = big_mac_df.drop(drop_07)
 
-    # Keep only the year
     big_mac_df['date'] = big_mac_df['date'].str[:4]
 
-    # Group by year and calculate average price
     yearly_prices = big_mac_df.groupby('date')['local_price'].mean().reset_index()
 
-    # Calculate percentage change
     yearly_prices['price_change_pct'] = yearly_prices['local_price'].pct_change() * 100
 
-    # Rename for clarity
     yearly_prices = yearly_prices.rename(columns={'local_price': 'average_price'})
     yearly_prices.to_csv('yearly.csv')
 
@@ -52,13 +47,7 @@ def clean_up_data():
 def clean_cpi():
     cpi_df = setup_cpi()
 
-    drop_mar = cpi_df[cpi_df['Quarter'].str.contains('Mar')].index
-    cpi_df = cpi_df.drop(drop_mar)
-
-    drop_jun = cpi_df[cpi_df['Quarter'].str.contains('Jun')].index
-    cpi_df = cpi_df.drop(drop_jun)
-    drop_sep = cpi_df[cpi_df['Quarter'].str.contains('Sep')].index
-    cpi_df = cpi_df.drop(drop_sep)
+    cpi_df = cpi_df[cpi_df['Quarter'].str.contains('Dec')]
     cpi_df['Quarter'] = cpi_df['Quarter'].str[4:]
     cpi_df['Quarter'] = '20' + cpi_df['Quarter']
     
