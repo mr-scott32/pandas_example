@@ -7,7 +7,7 @@ def main_menu():
         print("2. View visualisation")
         print("3. Exit")
 
-        choice = input("Select an option (1-6): ").strip()
+        choice = input("Select an option (1-3): ").strip()
 
         if choice == '1':
             display_dataset_preview()
@@ -17,7 +17,7 @@ def main_menu():
             print("Exiting program.")
             break
         else:
-            print("Invalid selection. Please choose a number between 1 and 6.")
+            print("Invalid selection. Please choose a number between 1 and 3.")
 
 if __name__ == "__main__":
     main_menu()
