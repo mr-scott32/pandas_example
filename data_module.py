@@ -2,6 +2,26 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 
+def select_chart():
+    while True:
+        user_input = input('Which chart would you like to preview?\n1 - Big Mac Percentage Increase \n2 - CPI Percentage Increase\n3- Compare CPI and Big Mac Increases\nEnter Option: ')
+        if user_input == '1':
+            show_big_mac()
+            break
+        elif user_input == '2':  
+            show_cpi()
+            break
+        elif user_input == '3':
+            compare_big_mac_and_cpi()
+            break
+        else: 
+            print('Please select a valid option')
+
+def select_year():
+    cpi_df = setup_cpi()
+    year = input('Enter which year you would like to check CPI data for?\nPlease enter as two last digits (e.g. 22 for 2022): ')
+    selected_rows = cpi_df.loc[cpi_df['Quarter'].str.contains(year)]
+    print(selected_rows)
 
 def setup_bm():
     big_mac_df = pd.read_csv('big_mac.csv')
@@ -14,11 +34,19 @@ def setup_cpi():
 
 
 def display_dataset_preview():
-    big_mac_df = setup_bm()
-    print(big_mac_df)
-
-    cpi_df = setup_cpi()
-    print(cpi_df)
+    while True:
+        user_input = input('Which Dataset would you like to preview?\n1 - Big Mac Data \n2 - CPI Data\n Enter Option: ')
+        if user_input == '1':
+            big_mac_df = setup_bm()
+            print(big_mac_df)
+            break
+        elif user_input == '2':  
+            cpi_df = setup_cpi()
+            print(cpi_df)
+            select_year()
+            break
+        else: 
+            print('Please select a valid option')
 
 
 def clean_up_data():
@@ -53,6 +81,28 @@ def clean_cpi():
     
     return cpi_df
 
+
+def show_big_mac():
+    big_mac_df = clean_up_data() 
+    big_mac_df = big_mac_df.sort_values('date')
+    plt.plot(big_mac_df['date'], big_mac_df['price_change_pct'], color='tab:blue', label='Big Mac Price Change (%)')
+    plt.xlabel('Year')
+    plt.ylabel('Big Mac Price Change (%)', color='tab:blue')
+    plt.tick_params(axis='y', labelcolor='tab:blue')
+    plt.title('Big Mac Percentage Increase')
+    plt.show()
+
+def show_cpi():
+    cpi_df = clean_cpi()
+    cpi_df = cpi_df.sort_values('Quarter')
+    plt.plot(cpi_df['Quarter'], cpi_df['Annual change (%)'], color='tab:red', label='CPI Annual Change (%)')
+    plt.xlabel('Year')
+    plt.ylabel('Big Mac Price Change (%)', color='tab:blue')
+    plt.ylabel('CPI Annual Change (%)', color='tab:red')
+    plt.tick_params(axis='y', labelcolor='tab:red')
+    plt.title('CPI Percentage Increase')
+    plt.show()
+
 def compare_big_mac_and_cpi():
     big_mac_df = clean_up_data()  # Now returns average_price + price_change_pct per year
     cpi_df = clean_cpi()
@@ -82,14 +132,12 @@ def compare_big_mac_and_cpi():
     ax1.legend(lines1 + lines2, labels1 + labels2, loc='upper left')
 
     plt.tight_layout()
+    plt.show()
 
     # Save the figure
-    output_path = os.path.join(os.getcwd(), 'big_mac_vs_cpi.png')
-    plt.savefig(output_path)
-    print(f"Plot saved to {output_path}")
 
     
-compare_big_mac_and_cpi()
+
     
 
 

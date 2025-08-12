@@ -4,7 +4,7 @@ def main_menu():
     while True:
         print("\n=== Data Viewer Interface ===")
         print("1. View dataset")
-        print("2. View visualisation")
+        print("2. View Charts")
         print("3. Exit")
 
         choice = input("Select an option (1-3): ").strip()
@@ -12,7 +12,7 @@ def main_menu():
         if choice == '1':
             display_dataset_preview()
         elif choice == '2':
-            compare_big_mac_and_cpi()
+            select_chart()
         elif choice == '3':
             print("Exiting program.")
             break
